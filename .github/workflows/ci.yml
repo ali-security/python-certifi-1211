@@ -2,15 +2,14 @@ name: CI
 
 on:
   push:
-    branches: [master]
+    branches: [master, main]
   pull_request: {}
-  
 permissions:
   contents: read
 
 jobs:
   mypy:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
@@ -22,27 +21,27 @@ jobs:
         run: mypy --strict certifi
 
   test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         python-version:
-        - "3.6"
-        - "3.7"
-        - "3.8"
-        - "3.9"
-        - "3.10"
-        - "3.11"
-        - "3.12-dev"
+          - '3.6'
+          - '3.7'
+          - '3.8'
+          - '3.9'
+          - '3.10'
+          - '3.11'
+          - 3.12-dev
     steps:
-    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@65d7f2d534ac1bc67fcd62888c5f4f3d2cb2b236 # v4.7.1
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install test dependencies
-      run: |
-        python -m pip install --upgrade pip
-        python -m pip install pytest
-    - name: Test with pytest
-      run: |
-        python -W error -W 'ignore:Running attrs on Python 3.6' -m pytest
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@65d7f2d534ac1bc67fcd62888c5f4f3d2cb2b236 # v4.7.1
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+      - name: Test with pytest
+        run: |
+          python -W error -W 'ignore:Running attrs on Python 3.6' -m pytest

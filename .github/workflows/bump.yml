@@ -2,17 +2,13 @@ name: Bump cacert.pem
 
 on:
   workflow_dispatch:
-  schedule:
-    # Run daily
-    - cron: "0 0 * * *"
-
 permissions:
   contents: read
 
 jobs:
   bump:
     if: github.repository_owner == 'certifi'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     permissions:
       contents: write  # for peter-evans/create-pull-request to create branch
       pull-requests: write  # for peter-evans/create-pull-request to create a PR
@@ -31,7 +27,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@153407881ec5c347639a548ade7d8ad1d6740e38 # v5.0.2
         with:
-          commit-message: "${{ steps.update-date.outputs.DATE }}"
-          title: "${{ steps.update-date.outputs.DATE }}"
+          commit-message: ${{ steps.update-date.outputs.DATE }}
+          title: ${{ steps.update-date.outputs.DATE }}
           token: ${{ secrets.GITHUB_TOKEN }}
         if: steps.update-date.outputs.DATE
